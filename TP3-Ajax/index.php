@@ -14,11 +14,16 @@ Flight::route("GET /username/existe/@name",function($name){
 
     $pdo = new PDO("sqlite:data.db");
     $resultat=NULL;
-    
-    /**
-     * TODO : à compléter
-     */
 
+    $recherche = $pdo->prepare("SELECT COUNT(*) FROM User WHERE nomUser = ?");
+    $recherche->execute(array($name));
+    $nombre = $recherche->fetchColumn(0);
+
+    if($nombre != 0) {
+        $resultat = ["Disponible"=>"Faux"];
+    } else {
+        $resultat = ["Disponible"=>"Vrai"];
+    }
     
     Flight::json($resultat);
   
