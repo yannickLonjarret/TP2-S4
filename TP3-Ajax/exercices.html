@@ -158,12 +158,26 @@
 		 function rempli(idChamp){			
 			if($(`${idChamp} :input`).val().trim().length==0 )
 				$(`${idChamp}`).addClass('erreur')
-			else
+			else{
 				$(`${idChamp}`).removeClass('erreur')
+				unique($("#nom :input").val);
+        
+			}
+		}
+
+		function unique(nom){
+			$.getJSON(`username/existe/${nom}`, function (data){
+				if(data["existe"]){
+					$("#nom").addClass('erreur')
+				}
+				else{
+					$("#nom").removeClass('erreur')
+				}
+			})
+
 		}
 
 		 /**
-		  * exemple (non spécifié dans l'énoncé)
 		  * vérifie si le texte du champ de saisie dans l'élément #idChamp dépasse ou non une taille max
 		  * ajoute la classe .erreur supérieur
 		  * modifie l'affichage du span associé
@@ -250,21 +264,7 @@
 		}
 
 
-		/**
-		 * Fonction de vérification de l'exercice 3
-		 * */
-		 function verification(){
 
-			//contrôler chacun des champs immédiatement (pas sur évenement clic, blur, etc)
-			// ...
-
-
-			
-			// renvoyer vrai (ok) ou faux (pas ok) selon le nombre d'éléments en erreur 
-
-			
-			
-		}
 
 
 /**
