@@ -20,9 +20,9 @@ Flight::route("GET /username/existe/@name",function($name){
     $nombre = $recherche->fetchColumn(0);
 
     if($nombre != 0) {
-        $resultat = ["Existe"=>"Vrai"];
+        $resultat = ["existe"=>true];
     } else {
-        $resultat = ["Existe"=>"Faux"];
+        $resultat = ["existe"=>false];
     }
     
     Flight::json($resultat);
