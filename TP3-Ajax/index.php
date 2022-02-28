@@ -20,9 +20,9 @@ Flight::route("GET /username/existe/@name",function($name){
     $nombre = $recherche->fetchColumn(0);
 
     if($nombre != 0) {
-        $resultat = ["Disponible"=>"Faux"];
+        $resultat = ["Existe"=>"Vrai"];
     } else {
-        $resultat = ["Disponible"=>"Vrai"];
+        $resultat = ["Existe"=>"Faux"];
     }
     
     Flight::json($resultat);
@@ -58,6 +58,10 @@ Flight::route("GET /commune/@code",function($code){
 
     $pdo = new PDO("sqlite:data.db");
     $resultat=NULL;
+
+    $recherche = $pdo->prepare("SELECT CodeCommune FROM Commune WHERE CodePostal = ?");
+    $recherche->execute(array($code));
+    $resultat = $recherche->fetch(PDO::FETCH_ASSOC);
 
     /**
      * TODO : à compléter
