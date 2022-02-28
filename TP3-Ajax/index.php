@@ -35,8 +35,10 @@ Flight::route("GET /username/existe/@name",function($name){
  */
 Flight::route("GET /styles",function(){
 
-    $recherche = Flight::request()->query->/*[A COMPLETER]*/PARAMETRE_DE_LA_REQUETE;
+    $pdo = new PDO("sqlite:data.db");
     $resultat=NULL;
+    $recherche = Flight::request()->query->$term;
+    $resultat->execute(array("%$recherche%"));
 
     /**
      * TODO : à compléter
