@@ -63,7 +63,7 @@ Flight::route("GET /commune/@code",function($code){
 
     $recherche = $pdo->prepare("SELECT CodeCommune FROM Commune WHERE CodePostal = ?");
     $recherche->execute(array($code));
-    $resultat = $recherche->fetch(PDO::FETCH_ASSOC);
+    $resultat = $recherche->fetchAll(PDO::FETCH_ASSOC);
 
     /**
      * TODO : à compléter

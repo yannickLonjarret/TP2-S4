@@ -1,0 +1,307 @@
+<!-- version du formulaire sans PHP -->
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<script src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+	<style>
+		.erreur label {
+			color: #F00;
+		}
+		.erreur input, .erreur select,.erreur textarea{
+			border:1px red solid !important;
+			
+		}
+
+		.container {
+			width: 75%;
+			margin: auto;
+		}
+		span.pure-form-message-inline{
+			/* spans corresponsant au messages d'erreur */
+			display: none;
+		}
+		.erreur span.pure-form-message-inline{
+			display: initial;
+		}
+
+		/* ajouter les règles nécessaires ici*/
+	</style>
+</head>
+
+<body>
+	<div class='pure-g  container'>
+		<div class='pure-u-1'>
+			<h2>TP 2</h2>
+			<h3>Utilisation de jquery</h3>
+			
+			<form id='formulaire' class='pure-form pure-form-aligned' action="#" method='POST' novalidate>
+
+				<div id='nom' class='pure-control-group'>
+					
+
+					<label>Nom</label>
+					<input type='text' name='nom' placeholder='nom de groupe' value=''>
+					<span class="pure-form-message-inline">Renseigner le nom du groupe</span>
+				</div>
+
+				<div id='email' class='pure-control-group'>
+					<label>Email</label>
+					<input type='email' name='email' placeholder="mail valide" value=''>
+					<span class="pure-form-message-inline">Renseigner une adresse email</span>
+				</div>
+
+				<div id='pass' class="pure-control-group">					
+					<label>Password</label>					
+					<input type='password' name='pass' placeholder="mot de passe" />
+					<span class="pure-form-message-inline">Saisir votre mot de passe d'au moins 8 caractères</span>
+				</div>
+
+				<div id='dept' class='pure-control-group'>
+					
+					<label>Département</label>
+					<select name="Dept">
+        			<option value="">--</option>
+						<option>Aisne</option>
+						<option>Nord</option>
+						<option>Oise</option>
+						<option>Pas de Calais</option>
+						<option>Somme</option>
+						<option>Autre</option>
+      				</select>
+					<span class="pure-form-message-inline">Choisir un département dans la liste</span>
+				</div>
+				<div id='annee' class="pure-control-group">
+					
+					<label>Année de création</label>
+					<input name='annee' type='number' list='annees' name='annee' min="1900" value="" />
+					<span class="pure-form-message-inline">Renseigner l'année de création</span>
+
+				</div>
+
+				<div id='site' class="pure-control-group">					
+					<label>Site web</label>
+					<input type='text' name='web' placeholder="https://" value="" />
+					<span class="pure-form-message-inline">Indiquer un site web</span>
+				</div>
+
+				<div id='style' class="pure-control-group">					
+					<label>Style musical</label>					
+					<input type='text' name='style' placeholder="Rock, Pop, Folk, Musette..." value="" />
+					<span class="pure-form-message-inline">Indiquer un syle musical</span>									
+										
+				</div>
+
+
+				<div id='presentation' class="pure-control-group">					
+					<label>Presentation</label>					
+					<textarea cols='50' rows='5' name='presentation' placeholder="Présentation courte du groupe"></textarea>
+					<span class="pure-form-message-inline message">Compléter la présentation</span>	
+					<span class="pure-form-message-inline taille"></span>									
+										
+				</div>
+				<div id='scene' class='pure-control-group'>
+					<label for="">Type de scène</label>
+					<div id='scene' class='pure-controls'>					
+						<label><input type='radio' name='scene' value='amp'> Amplifiée</label>
+						<label><input type='radio' name='scene' value='fol'> Folk</label>
+						<label><input type='radio' name='scene' value='jam'> Jam Session</label>
+						<span class="pure-form-message-inline">Indiquer le type de scène</span>
+					</div>
+				</div>
+				<div id='statut' class='pure-control-group'>
+					<label>Type de statut</label>
+					<div class='pure-controls'>					
+						<label><input type='radio' name='statut' value='amp'> Régime SACEM</label>
+						<label><input type='radio' name='statut' value='fol'> Associatif </label>
+						<label><input type='radio' name='statut' value='jam'> Producteur </label>
+						<span class="pure-form-message-inline">Indiquer votre statut de musicien</span>
+					</div>
+				</div>
+
+
+				<div id='cgv' class='pure-controls'>
+					<label><input type='checkbox' name='accepte' value='oui'> J'accepte les conditions d'utilisation</label>
+					<span class="pure-form-message-inline">Veuillez accepter les conditions d'utilisation</span>
+				</div>
+
+				<div class='pure-controls'>
+					<label><input type='button' id='bouton-exo1' value="Exo1"></label>
+				</div>
+
+
+				<div class='pure-controls'>
+					<label><input type='submit' id='bouton-exo3' value="Vérifier"></label>
+				</div>
+
+		</form>
+	</div>
+	</div>
+	<script type="text/javascript">		
+	/**
+	*  Inclure la librairie jQuery
+	* */
+	</script>
+
+	<script type="text/javascript">
+		/**
+		 *  Fonctions de vérification de chaque champ de l'exercice 2
+		 * 
+		 * */
+
+
+		 /**
+		  * vérifie si le champ de saisie dans l'élément #idChamp contient du texte
+		  * ajoute la classe .erreur si vide
+		  */
+		 function rempli(idChamp){			
+			if($(`${idChamp} :input`).val().trim().length==0 )
+				$(`${idChamp}`).addClass('erreur')
+			else
+				$(`${idChamp}`).removeClass('erreur')
+		}
+
+		 /**
+		  * exemple (non spécifié dans l'énoncé)
+		  * vérifie si le texte du champ de saisie dans l'élément #idChamp dépasse ou non une taille max
+		  * ajoute la classe .erreur supérieur
+		  * modifie l'affichage du span associé
+		  */
+
+		function max(idChamp,taille){			
+			let tailleTexte=$(`${idChamp} :input`).val().length
+			//span ajouté pour indiquer les caractères restants
+			$(`${idChamp} .taille`).show().text(Math.max(0,taille-tailleTexte)+" caractères restants")
+			if(tailleTexte==0){ 				
+				$(`${idChamp} .message`).show()
+				return
+			}
+			if(tailleTexte>taille ){
+				$(`${idChamp}`).addClass('erreur')				
+				$(`${idChamp} .message`).hide()
+				$(`${idChamp} :input`).val($(`${idChamp} :input`).val().substring(0,100) )
+			}
+			else{
+				$(`${idChamp}`).removeClass('erreur')
+				
+			}
+		}
+		/**
+		 * vérifie si le format du champ de saisie dans l'élément #idChamp 
+		 * est valide par rapport au type spécifié (email, date, url, etc)
+		 * */
+		function valideFormat(idChamp){
+			//récupère le premier élément DOM inclus dans l'objet jQuery :  $(...)[0]
+			//checkValidity renvoie false si une des conditions n'est pas respectée 
+			// 
+			// @see  https://developer.mozilla.org/en-US/docs/Web/API/HTMLSelectElement/checkValidity
+			if(! $(`${idChamp} :input`)[0].checkValidity() ) 
+				$(idChamp).addClass('erreur')
+			else
+				$(idChamp).removeClass('erreur')
+		}
+
+		/**
+		 * vérifie si le format du champ de saisie dans l'élément #idChamp 
+		 * contient une CAPITALE, une minuscule, un chiffre, et a une longueur > 8
+		 * */
+		 function strong(idChamp){			
+			let val = $(`${idChamp} :input`).val()
+			if(val && val.length==0) return; //pas de test si le champ est vide
+			if( val.match(/[A-Z]/) && val.match(/[0-9]/) && val.match(/[a-z]/) && val.length>=8)
+				$(`${idChamp}`).removeClass('erreur')				
+			else
+				$(`${idChamp}`).addClass('erreur')		
+		}
+
+		/**
+		 * vérifie la présence d'au moins une case (radio, checkbox) cochée dans l'élément #idChamp 
+		 * */
+		function coche(idChamp){
+			if($(`${idChamp} :checked`).length==0 )
+				$(`${idChamp}`).addClass('erreur')
+			else
+				$(`${idChamp}`).removeClass('erreur')
+		}
+
+
+
+
+
+		/**
+		 * fonction d'introduction : exercice 1
+		 * */
+		 function exercice1(){
+			
+			//affiche chacune des valeurs des éléments input
+			//qui ne sont ni button, ni radio, ni checkbox
+			$(":input").not(':button, :radio, :checkbox').each(function(i,item){
+					console.log($(item).val());
+				})							
+			//affiche le nombre de boutons radios
+			console.log($(":radio").length+" radio"); 
+			//affiche le nombre de boutons radios cochés
+			console.log($(":radio").filter(':checked').length+" radio cochés"); 
+			//affiche si au moins une radio est cochée
+			console.log(" radio cochées ?"+$(":radio").is(':checked')); 
+			//affiche si la checkbox est cochée
+			console.log(" case cochée ?"+$("#cgv :checkbox").is(':checked')); 
+		}
+
+
+		/**
+		 * Fonction de vérification de l'exercice 3
+		 * */
+		 function verification(){
+
+			//contrôler chacun des champs immédiatement (pas sur évenement clic, blur, etc)
+			// ...
+
+
+			
+			// renvoyer vrai (ok) ou faux (pas ok) selon le nombre d'éléments en erreur 
+
+			
+			
+		}
+
+
+/**
+ * Fonction de démarrage
+ * mets en place les écouteurs d'événements (click, blur, change, submit...) sur les éléments à surveiller 
+ * 
+ * */
+		$(()=>{
+			
+			$('#bouton-exo1').click(exercice1)
+			//liste des champs sur lesquels on veut effectuer des vérifications
+			let champs=['#nom','#style','#annee','#site','#dept','#presentation','#email','#pass']
+			
+			//appeler la fonction rempli(#champ) lorsqu'on quitte l'input
+			for(let c of champs)				
+				$(`${c} :input`).blur( ()=>{rempli(c)} )
+			
+			//appeler la fonction coche(#champ) lorsqu'on change la valeur d'une radio/checkbox
+			let coches=['#cgv','#statut','#scene']
+			for(let c of coches)
+				$(`${c} :input`).change( ()=>{coche(c)} )
+			
+			//vérifier la force du mot de passe
+			$('#pass :input').blur( ()=>{strong('pass')} )
+
+			//vérifier la taille de la présentation
+			$('#presentation :input').keyup( ()=>{max('#presentation',100)} )
+			$('#presentation :input').blur( ()=>{max('#presentation',100)} )
+			$('#email :input').blur( ()=>{ valideFormat('#email') } )
+			
+			//attribuer au bouton3 la fonction vérification
+			// ..
+
+
+		})
+
+
+	</script>
+</body>
+</html>
