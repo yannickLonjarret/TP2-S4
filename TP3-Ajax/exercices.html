@@ -3,17 +3,23 @@
 
 <head>
 	<meta charset="utf-8">
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="./JQuery.css">
-	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+	<link rel="stylesheet" href="./JQuery.css">
+
 	<style>
-		.erreur label {
+		.erreur label, .erreurUnique label {
 			color: #F00;
 		}
-		.erreur input, .erreur select,.erreur textarea{
+		.erreur input,  .erreur select,.erreur textarea{
 			border:1px red solid !important;
 			
+		}
+
+		.erreurUnique input, .erreurUnique select, .erreurUnique textarea{
+			border: 1px red solid !important;
 		}
 
 		.container {
@@ -28,7 +34,11 @@
 			display: initial;
 		}
 
-		.erreur_unique span.pure-form-message-inline{
+		span.pure-form-message-unique{
+			display: none;
+		}
+
+		.erreurUnique span.pure-form-message-unique{
 			display: initial;
 		}
 
@@ -39,8 +49,8 @@
 <body>
 	<div class='pure-g  container'>
 		<div class='pure-u-1'>
-			<h2>TP 2</h2>
-			<h3>Utilisation de jquery</h3>
+			<h2>TP 3</h2>
+			<h3>Utilisation des requêtes asynchrones</h3>
 			
 			<form id='formulaire' class='pure-form pure-form-aligned' action="#" method='POST' novalidate>
 
@@ -50,6 +60,7 @@
 						<label>Nom</label>
 						<input type='text' name='nom' placeholder='nom de groupe' value=''>
 						<span class="pure-form-message-inline">Renseigner le nom du groupe</span>
+						<span class="pure-form-message-unique">Nom de groupe déjà utilisé</span>
 					</div>
 
 				<div id='email' class='pure-control-group'>
@@ -174,8 +185,10 @@
 		  * ajoute la classe .erreur si vide
 		  */
 		 function rempli(idChamp){			
-			if($(`${idChamp} :input`).val().trim().length==0 )
+			if($(`${idChamp} :input`).val().trim().length==0 ){
 				$(`${idChamp}`).addClass('erreur')
+				$(`${idChamp}`).removeClass('erreurUnique')
+			}
 			else{
 				$(`${idChamp}`).removeClass('erreur')
         
@@ -270,42 +283,57 @@
 			console.log(" case cochée ?"+$("#cgv :checkbox").is(':checked')); 
 		}
 
+
+		/*Code Exercice 4
+		* Prend en paramètre le nom saisi par l'utilisateur, et fait une requête grâce à la route /username/existe/
+		* Affiche le message d'erreur correspondant
+		*/
 		function unique(nom){
-			$.getJSON(`username/existe/${nom}`, function (data){
-				if(data["disponible"]){
-					$("#nom").addClass('erreur_unique')
+			$.getJSON(`username/existe/` + nom, function (data){
+				if(data.existe){
+					$("#nom").addClass('erreurUnique')
 				}
 				else{
-					$("#nom").removeClass('erreur_unique')
+					$("#nom").removeClass('erreurUnique')
 				}
 			})
 
 		}
 
+		/*Code Exercice 5
+		* Prend en paramètre le style saisi à chaque touche tapée, fait une requête grâce à la route /styles à l'aide du protocol GET
+		* Fait appel à la route grâce à la source. La route retourne un tableau contenant tous les styles commençant par le texte tapé.
+		*/
 		function autocomplete(){
-			$("#style").autocomplete({
-				source: "/styles"
-			});
-		}
-
-		/**
-		* Fonction de vérification de l'exercice 3
-		* */
-		function verification(){
-
-			$("#nom :input").blur( ()=>{unique($("nom :input").val())})
-
-			
-
-
-			
-			// renvoyer vrai (ok) ou faux (pas ok) selon le nombre d'éléments en erreur 
-
-			
-			
+			$("#style :input").autocomplete({
+				source: "styles"
+			})
 		}
 
 
+		/*Code Exercice 6
+		* Prend en paramètre le code postal tapé dans le champ code postal et fait une requête grâce à la route /commune/ qui retourne toute les communes de ce PC
+		* Les valeurs retournées sont utilisé dans l'autocomplete
+		*/
+		function communes(code_Postal){
+
+			$.getJSON(`commune/` + code_Postal, function(data){
+				//Vérifie si le tableau est vide (Si le PC est correcte)
+				if(data.length===0){
+					$('#commune :input').prop('disabled', true)
+                    $(`#commune :input`).val('')
+				}
+				else{
+					$('#commune :input').prop('disabled', false)
+					$("#commune :input").autocomplete({
+						source: data
+					})
+				}
+			})
+		}
+
+
+		function verification(){}
 /**
  * Fonction de démarrage
  * mets en place les écouteurs d'événements (click, blur, change, submit...) sur les éléments à surveiller 
@@ -340,7 +368,9 @@
 
 			$('#style :input').keyup(autocomplete)
 
+			$('#code_postal :input').change(() => communes($('#code_postal input').val()))
 
+			$("#nom :input").blur(()=> unique($('#nom input').val()))
 		})
 
 
