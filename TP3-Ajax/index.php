@@ -42,14 +42,10 @@ Flight::route("GET /styles",function(){
     $pdo = new PDO("sqlite:data.db");
     $resultat=NULL;
     $term = $_GET["term"];
+
     $recherche = $pdo->prepare("SELECT NomStyle FROM Style WHERE NomStyle LIKE ?");
     $recherche->execute(array("$term%"));
     $resultat = $recherche->fetchAll(PDO::FETCH_ASSOC);
-    /**
-     * TODO : à compléter
-     */
-
-        
 
     Flight::json($resultat);
     }
