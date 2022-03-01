@@ -17,6 +17,8 @@ Flight::route("GET /username/existe/@name",function($name){
 
     $recherche = $pdo->prepare("SELECT COUNT(*) FROM User WHERE nomUser = ?");
     $recherche->execute(array($name));
+
+    
     $nombre = $recherche->fetchColumn(0);
 
     if($nombre != 0) {
@@ -26,8 +28,9 @@ Flight::route("GET /username/existe/@name",function($name){
     }
     
     Flight::json($resultat);
+
+});
   
-  });
 
 /**
  * Exo2
@@ -61,14 +64,10 @@ Flight::route("GET /commune/@code",function($code){
     $pdo = new PDO("sqlite:data.db");
     $resultat=NULL;
 
-    $recherche = $pdo->prepare("SELECT CodeCommune FROM Commune WHERE CodePostal = ?");
+    $recherche = $pdo->prepare("SELECT NomCommune FROM Commune WHERE CodePostal = ?");
+
     $recherche->execute(array($code));
     $resultat = $recherche->fetchAll(PDO::FETCH_ASSOC);
-
-    /**
-     * TODO : à compléter
-     */
-
 
     Flight::json($resultat);
   

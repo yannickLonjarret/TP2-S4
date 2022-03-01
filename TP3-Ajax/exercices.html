@@ -26,6 +26,10 @@
 			display: initial;
 		}
 
+		.erreur_unique span.pure-form-message-inline{
+			display: initial;
+		}
+
 		/* ajouter les règles nécessaires ici*/
 	</style>
 </head>
@@ -38,17 +42,17 @@
 			
 			<form id='formulaire' class='pure-form pure-form-aligned' action="#" method='POST' novalidate>
 
-				<div id='nom' class='pure-control-group'>
-					
+					<div id='nom' class='pure-control-group'>
+						
 
-					<label>Nom</label>
-					<input type='text' name='nom' placeholder='nom de groupe' value=''>
-					<span class="pure-form-message-inline">Renseigner le nom du groupe</span>
-				</div>
+						<label>Nom</label>
+						<input type='text' name='nom' placeholder='nom de groupe' value=''>
+						<span class="pure-form-message-inline">Renseigner le nom du groupe</span>
+					</div>
 
 				<div id='email' class='pure-control-group'>
 					<label>Email</label>
-					<input type='email' name='email' placeholder="mail valide" value=''>
+					<input type='email' name='mail' placeholder="mail valide" value=''>
 					<span class="pure-form-message-inline">Renseigner une adresse email</span>
 				</div>
 
@@ -72,6 +76,23 @@
       				</select>
 					<span class="pure-form-message-inline">Choisir un département dans la liste</span>
 				</div>
+
+				<div id='code_postal' class='pure-control-group'>
+						
+
+						<label>Code Postal</label>
+						<input type='text' name='code_postal' placeholder='Votre code postal' value=''>
+						<span class="pure-form-message-inline">Renseigner votre code postal</span>
+				</div>
+
+				<div id='commune' class='pure-control-group'>
+						
+
+						<label>Commune</label>
+						<input type='text' name='commune' placeholder='Le nom de votre commune' value=''>
+						<span class="pure-form-message-inline">Renseigner votre commune</span>
+				</div>
+							
 				<div id='annee' class="pure-control-group">
 					
 					<label>Année de création</label>
@@ -138,11 +159,7 @@
 		</form>
 	</div>
 	</div>
-	<script type="text/javascript">		
-	/**
-	*  Inclure la librairie jQuery
-	* */
-	</script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>	
 
 	<script type="text/javascript">
 		/**
@@ -160,22 +177,11 @@
 				$(`${idChamp}`).addClass('erreur')
 			else{
 				$(`${idChamp}`).removeClass('erreur')
-				unique($("#nom :input").val);
         
 			}
 		}
 
-		function unique(nom){
-			$.getJSON(`username/existe/${nom}`, function (data){
-				if(data["existe"]){
-					$("#nom").addClass('erreur')
-				}
-				else{
-					$("#nom").removeClass('erreur')
-				}
-			})
-
-		}
+		
 
 		 /**
 		  * vérifie si le texte du champ de saisie dans l'élément #idChamp dépasse ou non une taille max
@@ -263,8 +269,33 @@
 			console.log(" case cochée ?"+$("#cgv :checkbox").is(':checked')); 
 		}
 
+		function unique(nom){
+			$.getJSON(`username/existe/${nom}`, function (data){
+				if(data["disponible"]){
+					$("#nom").addClass('erreur_unique')
+				}
+				else{
+					$("#nom").removeClass('erreur_unique')
+				}
+			})
+
+		}
 
 
+		/**
+		* Fonction de vérification de l'exercice 3
+		* */
+		function verification(){
+
+			$(`#nom :input`).blur( ()=>{unique($('nom :input').val())})
+
+
+			
+			// renvoyer vrai (ok) ou faux (pas ok) selon le nombre d'éléments en erreur 
+
+			
+			
+		}
 
 
 /**
@@ -276,7 +307,7 @@
 			
 			$('#bouton-exo1').click(exercice1)
 			//liste des champs sur lesquels on veut effectuer des vérifications
-			let champs=['#nom','#style','#annee','#site','#dept','#presentation','#email','#pass']
+			let champs=['#nom','#style','#annee','#site','#dept','#presentation','#mail','#pass']
 			
 			//appeler la fonction rempli(#champ) lorsqu'on quitte l'input
 			for(let c of champs)				
@@ -297,6 +328,7 @@
 			
 			//attribuer au bouton3 la fonction vérification
 			// ..
+			$('#bouton-exo3 :input').click(verification)
 
 
 		})
